@@ -1,3 +1,4 @@
+[![Google Chrome](https://img.shields.io/chrome-web-store/v/dgnkgalpolbfilhhdejcbbapehkbjdkl?label=Get%20VKS%20for%20Chrome&logo=Google%20Chrome)](https://chrome.google.com/webstore/detail/viaplay-keyboard-shortcut/dgnkgalpolbfilhhdejcbbapehkbjdkl)
 # Features
 
 - `m`     - Mute/Unmute  
