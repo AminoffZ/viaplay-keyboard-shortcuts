@@ -19,8 +19,9 @@ Viaplay is a streaming service with very limited hotkey functionality. This unpa
 (PS. There is also one [one for Telia TV](https://github.com/Hamatti/teliatv-keyboard-shortcuts))
 
 ## How to use?
-
-It's currently an unpacked extension so download and unzip it into a folder. Then open your Google Chrome, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into.
+For most browsers [click here](https://chrome.google.com/webstore/detail/viaplay-keyboard-shortcut/dgnkgalpolbfilhhdejcbbapehkbjdkl).  
+### Manual installation
+Download and unzip it into a folder. Then open your Google Chrome, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into.
 
 Now whenever you navigate to [viaplay.fi](https://viaplay.fi) and start playing a video, the new keyboard shortcuts will be available.
 
