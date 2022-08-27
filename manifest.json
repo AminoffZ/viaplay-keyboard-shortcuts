@@ -5,15 +5,18 @@
   "web_accessible_resources": ["script.js"],
   "content_scripts": [
     {
-      "matches": ["https://*.viaplay.fi/*", 
-                  "https://*.viaplay.se/*", 
-                  "https://*.viaplay.no/*",
-                  "https://*.viaplay.dk/*", 
-                  "https://*.viaplay.is/*", 
-                  "https://*.viaplay.ee/*", 
-                  "https://*.viaplay.lv/*", 
-                  "https://*.viaplay.lt/*", 
-                  "https://*.viaplay.pl/*"],
+      "matches": [
+        "https://*.viaplay.fi/*",
+        "https://*.viaplay.se/*",
+        "https://*.viaplay.no/*",
+        "https://*.viaplay.dk/*",
+        "https://*.viaplay.is/*",
+        "https://*.viaplay.ee/*",
+        "https://*.viaplay.lv/*",
+        "https://*.viaplay.lt/*",
+        "https://*.viaplay.pl/*",
+        "https://*.viaplay.com/*"
+      ],
       "js": ["content.js"]
     }
   ],
