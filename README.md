@@ -1,4 +1,5 @@
 [![Google Chrome](https://img.shields.io/chrome-web-store/v/dgnkgalpolbfilhhdejcbbapehkbjdkl?label=Get%20VKS%20for%20Chrome&logo=Google%20Chrome)](https://chrome.google.com/webstore/detail/viaplay-keyboard-shortcut/dgnkgalpolbfilhhdejcbbapehkbjdkl)
+[![Mozilla Firefox](https://img.shields.io/amo/v/viaplay-keyboard-shortcuts?label=Get%20VKS%20for%20Firefox&logo=Firefox)](https://addons.mozilla.org/en-US/firefox/addon/viaplay-keyboard-shortcuts/)
 # Features
 
 - `m`     - Mute/Unmute  
