@@ -12,7 +12,7 @@
 
 # Viaplay Keyboard Shortcuts (Chrome Extension)
 
-![](project-logo-viaplay-shortcuts.png)
+![](./images/project-logo-viaplay-shortcuts.png)
 
 Viaplay is a streaming service with very limited hotkey functionality. This unpacked Chrome extension aims to solve that problem.
 
