@@ -1,23 +1,19 @@
 /* We need to keep track of the player */
-let isPlayer = getIsPlayer();
+let isPlayer: boolean = getIsPlayer();
 
 /* We use react-mount as parent */
-function getReactMountElement() {
+function getReactMountElement(): HTMLElement {
   return document.getElementById("react-mount");
 }
 
 /* We see if current child is player */
-function getChildNodeName() {
-  return getReactMountElement().children[0].className.toString();
+function getChildNodeName(): string {
+  return getReactMountElement()?.children[0].className.toString();
 }
 
 /* If player exists, isPlayer = true */
-function getIsPlayer() {
-  if (getChildNodeName() === "Player-container-3Ekyi") {
-    return true;
-  } else {
-    return false;
-  }
+function getIsPlayer(): boolean {
+  return getChildNodeName() === "Player-container-3Ekyi";
 }
 
 /* Options for the observer (which mutations to observe) */
@@ -26,7 +22,7 @@ const reactMountConfig = { attributes: false, childList: true, subtree: false };
 const reactMountCallback = function (mutationsList) {
   /* Check when leave player */
   for (const mutation of mutationsList) {
-    mutationClass = mutation["addedNodes"][0];
+    const mutationClass = mutation["addedNodes"][0];
     if (mutationClass) {
       if (mutationClass.className === "Player-container-3Ekyi") {
         isPlayer = true;
@@ -51,13 +47,14 @@ const sceneConfig = { attributes: true, childList: false, subtree: false };
 const sceneCallback = function (mutationsList) {
   /* Check when UI hides/is shown */
   for (const mutation of mutationsList) {
-    mutationClassName = mutation["target"]["className"];
+    const mutationClassName = mutation["target"]["className"];
+    const sceneElement: HTMLElement = document.querySelector(".scene");
     if (mutationClassName === "scene hide") {
       /* If UI hides, we hide mouse */
-      document.querySelector(".scene").style.cursor = "none";
+      sceneElement.style.cursor = "none";
     } else {
       /* If UI is shown, we show mouse */
-      document.querySelector(".scene").style.cursor = "auto";
+      sceneElement.style.cursor = "auto";
     }
   }
 };
@@ -69,44 +66,42 @@ if (isPlayer) {
   observeScene(true);
 }
 
-function observeScene(canObserve) {
-  if (canObserve === true) {
-    sceneObserver.observe(document.querySelector(".scene"), sceneConfig);
-  } else {
-    sceneObserver.disconnect();
-  }
+function observeScene(canObserve: boolean) {
+  canObserve
+    ? sceneObserver.observe(document.querySelector(".scene"), sceneConfig)
+    : sceneObserver.disconnect();
 }
 
 /* Viaplay's player injects the controls as DOM elements when mouse moves so we need to trigger that */
-const showUI = () => {
+const showUI = (): void => {
   document
     .querySelector(".scene")
     .dispatchEvent(new Event("mousemove", { bubbles: true }));
 };
 
 /* Event to open audio slider */
-const showAudioSlider = () => {
+const showAudioSlider = (): void => {
   document
     .querySelector(".audio-control")
     .dispatchEvent(new Event("mouseover", { bubbles: true }));
 };
 
 /* Event to close audio slider */
-const hideAudioSlider = () => {
+const hideAudioSlider = (): void => {
   document
     .querySelector(".audio-control")
     .dispatchEvent(new Event("mouseout", { bubbles: true }));
 };
 
 /* Event to open subtitle selection */
-const showSubtitles = () => {
+const showSubtitles = (): void => {
   document
     .querySelector("button.language.subtitlesAvailable")
     .dispatchEvent(new Event("mouseover", { bubbles: true }));
 };
 
 /* Event to close subtitle selection */
-const hideSubtitles = () => {
+const hideSubtitles = (): void => {
   document
     .querySelector("button.language.subtitlesAvailable")
     .dispatchEvent(new Event("mouseout", { bubbles: true }));
@@ -114,11 +109,13 @@ const hideSubtitles = () => {
 
 /* Listen to user double-clicking */
 document.addEventListener("dblclick", function (event) {
-  if (isPlayer === true) {
+  if (isPlayer) {
     showUI();
     /* We ignore double-clicks on player controls */
     const ignoreClickOnMeElement = document.querySelector(".playback-controls");
-    const isClickInsideElement = ignoreClickOnMeElement.contains(event.target);
+    const isClickInsideElement = ignoreClickOnMeElement.contains(
+      event.target as Node
+    );
     if (!isClickInsideElement) {
       /* We trigger the f (fullscreen) button */
       document.dispatchEvent(new KeyboardEvent("keyup", { key: "f" }));
@@ -129,61 +126,56 @@ document.addEventListener("dblclick", function (event) {
 /* Listen to user pressing a button on the keyboard */
 document.addEventListener("keyup", (event) => {
   event.preventDefault();
-  if (isPlayer === true) {
+  if (isPlayer) {
     switch (event.key) {
       /* If it's m, we want to mute/unmute */
       case "m": {
         showUI();
-        const muteButton = document.querySelector(".audio-control");
+        const muteButton: HTMLElement =
+          document.querySelector(".audio-control");
         muteButton.click();
         setTimeout(() => {
-          if (document.querySelector(".play")) {
-            document.querySelector(".play").click();
-          }
+          const playButton: HTMLElement = document.querySelector(".play");
+          playButton?.click();
         }, 10);
         break;
       }
       /* If it's f, we want to toggle fullscreen */
       case "f": {
         showUI();
-        const fullscreen = document.querySelector(".fullscreen");
-        if (fullscreen) {
-          fullscreen.click();
-        } else if (document.querySelector(".no-fullscreen")) {
-          document.querySelector(".no-fullscreen").click();
-        }
+        const toggleFullscreen: HTMLElement =
+          document.querySelector(".fullscreen") ??
+          document.querySelector(".no-fullscreen");
+        toggleFullscreen?.click();
         setTimeout(() => {
-          if (document.querySelector(".play")) {
-            document.querySelector(".play").click();
-          }
+          const playButton: HTMLElement = document.querySelector(".play");
+          playButton?.click();
         }, 10);
         break;
       }
       /* If it's s, we want to skip intro/recap */
       case "s": {
-        const skipPreliminariesButton = document.querySelector(
+        const skipPreliminariesButton: HTMLElement = document.querySelector(
           ".skip-preliminaries-button"
         );
-        if (skipPreliminariesButton) {
-          skipPreliminariesButton.click();
-        }
+        skipPreliminariesButton?.click();
         break;
       }
       /* If it's n, we want to start next episode */
       case "n": {
-        const nextEpisodeButton = document.querySelector(
+        const nextEpisodeButton: HTMLElement = document.querySelector(
           ".Buttons-primary-3n82B"
         );
-        if (nextEpisodeButton) {
-          nextEpisodeButton.click();
-        }
+        nextEpisodeButton?.click();
         break;
       }
       case "t":
         /* If button was not held */
         if (holdTimer <= 1) {
           /* Cycle subtitles */
+          timer.cancel();
           changeSubtitles(false);
+          timer.setup(hideSubtitles, 2000);
         }
         /* Reset hold timer */
         holdTimer = 0;
@@ -193,11 +185,11 @@ document.addEventListener("keyup", (event) => {
 });
 
 /* Function to change volume */
-function changeVolume(changeAmount) {
+function changeVolume(changeAmount): void {
   showUI();
   showAudioSlider();
   /* We need to find __reactEventHandlers as it changes every time we go to Viaplay */
-  const audioSlider = document.querySelector(".audio-slider");
+  const audioSlider: HTMLElement = document.querySelector(".audio-slider");
   const reactHandlerKey = Object.keys(audioSlider).filter(function (item) {
     return item.indexOf("__reactProps") >= 0;
   });
@@ -227,7 +219,9 @@ document.addEventListener("keydown", (event) => {
         break;
       case "t":
         if (holdTimer === 2) {
+          timer.cancel();
           changeSubtitles(true);
+          timer.setup(hideSubtitles, 2000);
         }
         holdTimer++;
     }
@@ -263,14 +257,15 @@ const timer = {
   },
 };
 
-/* Cycle if toggle(bool) else toggle */
+/* Cycle if toggle false */
 function changeSubtitles(toggle) {
   showUI();
   showSubtitles();
-  timer.cancel();
   /* We find the subtitles */
-  const subtitles = document.querySelector("div.subtitle-languages").children[1]
-    .children;
+  const subtitles: HTMLElement[] = Array.from(
+    document.querySelector("div.subtitle-languages")?.children[1]
+      ?.children as HTMLCollectionOf<HTMLElement>
+  );
   const numberOfSubtitles = subtitles.length;
   if (numberOfSubtitles > 1) {
     if (toggle === true) {
@@ -295,5 +290,4 @@ function changeSubtitles(toggle) {
       currentSubtitle = 0;
     }
   }
-  timer.setup(hideSubtitles, 2000);
 }
