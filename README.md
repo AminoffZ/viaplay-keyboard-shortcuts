@@ -15,20 +15,28 @@
 
 ![](./images/project-logo-viaplay-shortcuts.png)
 
-Viaplay is a streaming service with very limited hotkey functionality. This unpacked Chrome extension aims to solve that problem.
+Viaplay is a streaming service with very limited hotkey functionality. This extension aims to solve that problem.
 
 (PS. There is also one [one for Telia TV](https://github.com/Hamatti/teliatv-keyboard-shortcuts))
 
 ## How to use?
-For most browsers [click here](https://chrome.google.com/webstore/detail/viaplay-keyboard-shortcut/dgnkgalpolbfilhhdejcbbapehkbjdkl).  
-### Manual installation
-Download and unzip it into a folder. Then open your Google Chrome, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into.
+For Chromium based browsers and Firefox click the buttons at the top of this document.
+### Manual installation for Chromium Browsers
+Download and unzip it into a folder. Then open your browser, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into. Then select the dist folder.
 
-Now whenever you navigate to [viaplay.fi](https://viaplay.fi) and start playing a video, the new keyboard shortcuts will be available.
+Now whenever you navigate to [viaplay.fi](https://viaplay.fi) (or other Viaplay domains) and start playing a video, the new keyboard shortcuts will be available.
 
 ## Note
 
 Please note that this extension is not affiliated, endorsed or supported by Viaplay or Viasat. It is a hobby project built by users.
+
+## Contributing
+
+Setup  
+```npm install```  
+Build  
+```npm run build```  
+The build folder (dist/) is configured in webpack/webpack.config.js. content.ts and script.ts are added to dist/ along with anything inside public/. You can add more files to src/scripts, just remember to add the relevant changes to webpack.config.js.  
 
 ## LICENSE
 
