@@ -1,1 +1,0 @@
-(()=>{const e=document.createElement("script");e.src=chrome.runtime.getURL("script.js"),(document.head||document.documentElement).appendChild(e),e.onload=function(){e.remove()}})();
