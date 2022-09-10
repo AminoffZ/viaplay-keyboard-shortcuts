@@ -22,7 +22,7 @@ Viaplay is a streaming service with very limited hotkey functionality. This exte
 ## How to use?
 For Chromium based browsers and Firefox click the buttons at the top of this document.
 ### Manual installation for Chromium Browsers
-Download and unzip it into a folder. Then open your browser, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into. Then select the dist folder.
+Download and unzip the latest release (to the right) and place it into a folder. Then open your browser, go to [chrome://extensions](chrome://extensions), enable Developer mode from the toggle and select "Load unpacked" and navigate to the folder you unzipped it into. Then select the dist folder.
 
 Now whenever you navigate to [viaplay.fi](https://viaplay.fi) (or other Viaplay domains) and start playing a video, the new keyboard shortcuts will be available.
 
