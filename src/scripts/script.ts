@@ -109,122 +109,116 @@ const hideSubtitles = (): void => {
 
 /* Listen to user double-clicking */
 document.addEventListener("dblclick", function (event) {
-  if (isPlayer) {
-    showUI();
-    /* We ignore double-clicks on player controls */
-    const ignoreClickOnMeElement = document.querySelector(".playback-controls");
-    const isClickInsideElement = ignoreClickOnMeElement.contains(
-      event.target as Node
-    );
-    if (!isClickInsideElement) {
-      /* We trigger the f (fullscreen) button */
-      document.dispatchEvent(new KeyboardEvent("keyup", { key: "f" }));
-    }
-  }
+  if (!isPlayer) return;
+  showUI();
+  /* We ignore double-clicks on player controls */
+  const ignoreClickOnMeElement = document.querySelector(".playback-controls");
+  const isClickInsideElement = ignoreClickOnMeElement.contains(
+    event.target as Node
+  );
+  if (isClickInsideElement) return;
+  /* We trigger the f (fullscreen) button */
+  document.dispatchEvent(new KeyboardEvent("keyup", { key: "f" }));
 });
 
 /* Listen to user pressing a button on the keyboard */
 document.addEventListener("keyup", (event) => {
   event.preventDefault();
-  if (isPlayer) {
-    switch (event.key) {
-      /* If it's m, we want to mute/unmute */
-      case "m": {
-        showUI();
-        const muteButton: HTMLElement =
-          document.querySelector(".audio-control");
-        muteButton.click();
-        setTimeout(() => {
-          const playButton: HTMLElement = document.querySelector(".play");
-          playButton?.click();
-        }, 10);
-        break;
-      }
-      /* If it's f, we want to toggle fullscreen */
-      case "f": {
-        showUI();
-        const toggleFullscreen: HTMLElement =
-          document.querySelector(".fullscreen") ??
-          document.querySelector(".no-fullscreen");
-        toggleFullscreen?.click();
-        setTimeout(() => {
-          const playButton: HTMLElement = document.querySelector(".play");
-          playButton?.click();
-        }, 10);
-        break;
-      }
-      /* If it's s, we want to skip intro/recap */
-      case "s": {
-        const skipPreliminariesButton: HTMLElement = document.querySelector(
-          ".skip-preliminaries-button"
-        );
-        skipPreliminariesButton?.click();
-        break;
-      }
-      /* If it's n, we want to start next episode */
-      case "n": {
-        const nextEpisodeButton: HTMLElement = document.querySelector(
-          ".Buttons-primary-3n82B"
-        );
-        nextEpisodeButton?.click();
-        break;
-      }
-      case "t":
-        /* If button was not held */
-        if (holdTimer <= 1) {
-          /* Cycle subtitles */
-          timer.cancel();
-          changeSubtitles(false);
-          timer.setup(hideSubtitles, 2000);
-        }
-        /* Reset hold timer */
-        holdTimer = 0;
+  if (!isPlayer) return;
+  switch (event.key) {
+    /* If it's m, we want to mute/unmute */
+    case "m": {
+      showUI();
+      const muteButton: HTMLElement = document.querySelector(".audio-control");
+      muteButton?.click();
+      setTimeout(() => {
+        const playButton: HTMLElement = document.querySelector(".play");
+        playButton?.click();
+      }, 10);
+      break;
     }
+    /* If it's f, we want to toggle fullscreen */
+    case "f": {
+      showUI();
+      const toggleFullscreen: HTMLElement =
+        document.querySelector(".fullscreen") ??
+        document.querySelector(".no-fullscreen");
+      toggleFullscreen?.click();
+      setTimeout(() => {
+        const playButton: HTMLElement = document.querySelector(".play");
+        playButton?.click();
+      }, 10);
+      break;
+    }
+    /* If it's s, we want to skip intro/recap */
+    case "s": {
+      const skipPreliminariesButton: HTMLElement = document.querySelector(
+        ".skip-preliminaries-button"
+      );
+      skipPreliminariesButton?.click();
+      break;
+    }
+    /* If it's n, we want to start next episode */
+    case "n": {
+      const nextEpisodeButton: HTMLElement = document.querySelector(
+        ".Buttons-primary-3n82B"
+      );
+      nextEpisodeButton?.click();
+      break;
+    }
+    case "t":
+      /* If button was not held */
+      if (holdTimer <= 1) {
+        /* Cycle subtitles */
+        timer.cancel();
+        changeSubtitles(false);
+        timer.setup(hideSubtitles, 2000);
+      }
+      /* Reset hold timer */
+      holdTimer = 0;
   }
-  return false;
 });
 
 /* Function to change volume */
 function changeVolume(changeAmount): void {
   showUI();
   showAudioSlider();
-  /* We need to find __reactEventHandlers as it changes every time we go to Viaplay */
+  /* We need to find __reactProps as it changes every time we go to Viaplay */
   const audioSlider: HTMLElement = document.querySelector(".audio-slider");
-  const reactHandlerKey = Object.keys(audioSlider).filter(function (item) {
+  const reactPropsKeys: string[] = Object.keys(audioSlider).filter(function (
+    item
+  ) {
     return item.indexOf("__reactProps") >= 0;
   });
-  const reactHandler = audioSlider[reactHandlerKey[0]];
+  const reactProps = audioSlider[reactPropsKeys[0]];
   /* We find where to change volume */
-  const volumeLevel = reactHandler.children.props;
+  const volumeProp = reactProps.children.props;
   /* Make sure audio stays within 0 and 1 */
-  const max = 1;
-  const min = 0;
-  const num = volumeLevel.value + changeAmount;
-  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-  const newVolume = clamp(num, min, max);
+  const newVolume = Math.min(Math.max(volumeProp.value + changeAmount, 0), 1);
   /* We change the volume */
-  volumeLevel.onChange(newVolume);
+  volumeProp?.onChange(newVolume);
   hideAudioSlider();
 }
 
 /* Listen to user pressing/holding down a button on the keyboard */
 document.addEventListener("keydown", (event) => {
-  if (isPlayer === true) {
-    switch (event.key) {
-      case "ArrowUp":
-        changeVolume(0.1);
-        break;
-      case "ArrowDown":
-        changeVolume(-0.1);
-        break;
-      case "t":
-        if (holdTimer === 2) {
-          timer.cancel();
-          changeSubtitles(true);
-          timer.setup(hideSubtitles, 2000);
-        }
-        holdTimer++;
-    }
+  event.preventDefault();
+  if (!isPlayer) return;
+  switch (event.key) {
+    case "ArrowUp":
+      changeVolume(0.1);
+      break;
+    case "ArrowDown":
+      changeVolume(-0.1);
+      break;
+    case "t":
+      // When holdtimer was 2 seconds
+      if (holdTimer == 2) {
+        timer.cancel();
+        changeSubtitles(true);
+        timer.setup(hideSubtitles, 2000);
+      }
+      holdTimer++;
   }
 });
 
@@ -267,27 +261,31 @@ function changeSubtitles(toggle) {
       ?.children as HTMLCollectionOf<HTMLElement>
   );
   const numberOfSubtitles = subtitles.length;
-  if (numberOfSubtitles > 1) {
-    if (toggle === true) {
-      /* Check if subtitles are on */
-      if (!subtitles[numberOfSubtitles - 1].className) {
-        /* Turn off subtitles */
-        subtitles[numberOfSubtitles - 1].click();
-      } else {
-        /* Turn on subtitles to previous */
-        subtitles[currentSubtitle].click();
-      }
-      /* If subtitles off, toggle to previous */
-    } else if (subtitles[numberOfSubtitles - 1].className) {
-      subtitles[currentSubtitle].click();
-      /* Cycle to next subtitles */
-    } else if (currentSubtitle < numberOfSubtitles - 2) {
-      subtitles[currentSubtitle + 1].click();
-      currentSubtitle++;
-    } else {
-      /* Reset subtitles cycle */
-      subtitles[0].click();
-      currentSubtitle = 0;
-    }
+  if (numberOfSubtitles <= 1) return;
+  if (currentSubtitle >= numberOfSubtitles) {
+    subtitles[0].click();
+    currentSubtitle = 0;
+    return;
   }
+  const subtitlesOn = !subtitles[numberOfSubtitles - 1].className;
+  /* If subtitles off, go to previous */
+  if (!subtitlesOn) {
+    /* Turn on subtitles to previous */
+    subtitles[currentSubtitle].click();
+    return;
+  }
+  if (toggle) {
+    /* Turn off subtitles */
+    subtitles[numberOfSubtitles - 1].click();
+    return;
+  }
+  /* Cycle to next subtitles */
+  if (currentSubtitle < numberOfSubtitles - 2) {
+    subtitles[currentSubtitle + 1].click();
+    currentSubtitle++;
+    return;
+  }
+  /* Reset subtitles cycle */
+  subtitles[0].click();
+  currentSubtitle = 0;
 }
