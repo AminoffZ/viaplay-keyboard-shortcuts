@@ -13,7 +13,7 @@ function getChildNodeName(): string {
 
 /* If player exists, isPlayer = true */
 function getIsPlayer(): boolean {
-  return getChildNodeName() === "Player-container-3Ekyi";
+  return getChildNodeName().includes("Player");
 }
 
 /* Options for the observer (which mutations to observe) */
@@ -24,7 +24,7 @@ const reactMountCallback = function (mutationsList) {
   for (const mutation of mutationsList) {
     const mutationClass = mutation["addedNodes"][0];
     if (mutationClass) {
-      if (mutationClass.className === "Player-container-3Ekyi") {
+      if (mutationClass.className.includes("Player")) {
         isPlayer = true;
         observeScene(true);
       } else {
@@ -52,10 +52,10 @@ const sceneCallback = function (mutationsList) {
     if (mutationClassName === "scene hide") {
       /* If UI hides, we hide mouse */
       sceneElement.style.cursor = "none";
-    } else {
-      /* If UI is shown, we show mouse */
-      sceneElement.style.cursor = "auto";
+      continue;
     }
+    /* If UI is shown, we show mouse */
+    sceneElement.style.cursor = "auto";
   }
 };
 
@@ -190,13 +190,19 @@ function changeVolume(changeAmount): void {
   ) {
     return item.indexOf("__reactProps") >= 0;
   });
-  const reactProps = audioSlider[reactPropsKeys[0]];
-  /* We find where to change volume */
-  const volumeProp = reactProps.children.props;
-  /* Make sure audio stays within 0 and 1 */
-  const newVolume = Math.min(Math.max(volumeProp.value + changeAmount, 0), 1);
-  /* We change the volume */
-  volumeProp?.onChange(newVolume);
+  try {
+    /* We find where to change volume */
+    const volumeProps = audioSlider[reactPropsKeys[0]].children.props;
+    /* Make sure audio stays within 0 and 1 */
+    const newVolume = Math.min(
+      Math.max(volumeProps.value + changeAmount, 0),
+      1
+    );
+    /* We change the volume */
+    volumeProps.onChange(newVolume);
+  } catch (e) {
+    console.log(e);
+  }
   hideAudioSlider();
 }
 
