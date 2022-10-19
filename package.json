@@ -11,7 +11,7 @@
     "webpack-cli": "^4.9.1"
   },
   "name": "viaplay-keyboard-shortcuts",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "repository": "https://github.com/AminoffZ/viaplay-keyboard-shortcuts.git",
   "author": "AminoffZ <55880031+AminoffZ@users.noreply.github.com>",
   "license": "MIT",
