@@ -79,20 +79,6 @@ const showUI = (): void => {
     .dispatchEvent(new Event("mousemove", { bubbles: true }));
 };
 
-/* Event to open audio slider */
-const showAudioSlider = (): void => {
-  document
-    .querySelector(".audio-control")
-    .dispatchEvent(new Event("mouseover", { bubbles: true }));
-};
-
-/* Event to close audio slider */
-const hideAudioSlider = (): void => {
-  document
-    .querySelector(".audio-control")
-    .dispatchEvent(new Event("mouseout", { bubbles: true }));
-};
-
 /* Event to open subtitle selection */
 const showSubtitles = (): void => {
   document
@@ -180,30 +166,19 @@ document.addEventListener("keyup", (event) => {
 });
 
 /* Function to change volume */
-function changeVolume(changeAmount): void {
-  showUI();
-  showAudioSlider();
-  /* We need to find __reactProps as it changes every time we go to Viaplay */
-  const audioSlider: HTMLElement = document.querySelector(".audio-slider");
-  const reactPropsKeys: string[] = Object.keys(audioSlider).filter(function (
-    item
-  ) {
-    return item.indexOf("__reactProps") >= 0;
-  });
+function changeVolume(changeAmount: number): void {
+  const videoElement: HTMLVideoElement = document.querySelector("video");
   try {
-    /* We find where to change volume */
-    const volumeProps = audioSlider[reactPropsKeys[0]].children.props;
     /* Make sure audio stays within 0 and 1 */
     const newVolume = Math.min(
-      Math.max(volumeProps.value + changeAmount, 0),
+      Math.max(videoElement.volume + changeAmount, 0),
       1
     );
     /* We change the volume */
-    volumeProps.onChange(newVolume);
+    videoElement.volume = newVolume;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
-  hideAudioSlider();
 }
 
 /* Listen to user pressing/holding down a button on the keyboard */
