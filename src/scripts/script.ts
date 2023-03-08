@@ -1,3 +1,28 @@
+// Class for timers
+class ResetableTimer {
+  timeoutID: ReturnType<typeof setTimeout> | number;
+  remind(func: Function) {
+    func();
+    this.timeoutID = undefined;
+  }
+  /* Start timer */
+  setup(func, time) {
+    if (typeof this.timeoutID === "number") {
+      this.cancel();
+    }
+    this.timeoutID = setTimeout(
+      function () {
+        this.remind(func);
+      }.bind(this),
+      time
+    );
+  }
+  /* Cancel timer */
+  cancel() {
+    clearTimeout(this.timeoutID);
+  }
+}
+
 /* We need to keep track of the player */
 let isPlayer: boolean = getIsPlayer();
 
@@ -79,6 +104,20 @@ const showUI = (): void => {
     .dispatchEvent(new Event("mousemove", { bubbles: true }));
 };
 
+/* Event to open audio slider */
+const showAudioSlider = (): void => {
+  document
+    .querySelector(".audio-control")
+    .dispatchEvent(new Event("mouseover", { bubbles: true }));
+};
+
+/* Event to close audio slider */
+const hideAudioSlider = (): void => {
+  document
+    .querySelector(".audio-control")
+    .dispatchEvent(new Event("mouseout", { bubbles: true }));
+};
+
 /* Event to open subtitle selection */
 const showSubtitles = (): void => {
   document
@@ -106,6 +145,9 @@ document.addEventListener("dblclick", function (event) {
   /* We trigger the f (fullscreen) button */
   document.dispatchEvent(new KeyboardEvent("keyup", { key: "f" }));
 });
+
+/* Dynamic timer */
+const volumeCycleTimer = new ResetableTimer();
 
 /* Listen to user pressing a button on the keyboard */
 document.addEventListener("keyup", (event) => {
@@ -156,9 +198,9 @@ document.addEventListener("keyup", (event) => {
       /* If button was not held */
       if (holdTimer <= 1) {
         /* Cycle subtitles */
-        timer.cancel();
+        volumeCycleTimer.cancel();
         changeSubtitles(false);
-        timer.setup(hideSubtitles, 2000);
+        volumeCycleTimer.setup(hideSubtitles, 2000);
       }
       /* Reset hold timer */
       holdTimer = 0;
@@ -169,6 +211,9 @@ document.addEventListener("keyup", (event) => {
 function changeVolume(changeAmount: number): void {
   const videoElement: HTMLVideoElement = document.querySelector("video");
   try {
+    volumeCycleTimer.cancel();
+    showUI();
+    showAudioSlider();
     /* Make sure audio stays within 0 and 1 */
     const newVolume = Math.min(
       Math.max(videoElement.volume + changeAmount, 0),
@@ -176,6 +221,7 @@ function changeVolume(changeAmount: number): void {
     );
     /* We change the volume */
     videoElement.volume = newVolume;
+    volumeCycleTimer.setup(hideAudioSlider, 2000);
   } catch (e) {
     console.error(e);
   }
@@ -195,9 +241,9 @@ document.addEventListener("keydown", (event) => {
     case "t":
       // When holdtimer was 2 seconds
       if (holdTimer == 2) {
-        timer.cancel();
+        subtitleCycleTimer.cancel();
         changeSubtitles(true);
-        timer.setup(hideSubtitles, 2000);
+        subtitleCycleTimer.setup(hideSubtitles, 2000);
       }
       holdTimer++;
   }
@@ -208,29 +254,7 @@ let holdTimer = 0;
 /* Tracks selected subtitle */
 let currentSubtitle = 0;
 /* Dynamic timer */
-const timer = {
-  /* Run at end of timer */
-  remind: function (func) {
-    func();
-    this.timeoutID = undefined;
-  },
-  /* Start timer */
-  setup: function (func, time) {
-    if (typeof this.timeoutID === "number") {
-      this.cancel();
-    }
-    this.timeoutID = setTimeout(
-      function () {
-        this.remind(func);
-      }.bind(this),
-      time
-    );
-  },
-  /* Cancel timer */
-  cancel: function () {
-    clearTimeout(this.timeoutID);
-  },
-};
+const subtitleCycleTimer = new ResetableTimer();
 
 /* Cycle if toggle false */
 function changeSubtitles(toggle) {
