@@ -229,7 +229,6 @@ function changeVolume(changeAmount: number): void {
 
 /* Listen to user pressing/holding down a button on the keyboard */
 document.addEventListener("keydown", (event) => {
-  event.preventDefault();
   if (!isPlayer) return;
   switch (event.key) {
     case "ArrowUp":
